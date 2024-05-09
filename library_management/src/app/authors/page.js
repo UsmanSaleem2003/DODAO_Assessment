@@ -1,29 +1,44 @@
 "use client"
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function Page() {
     const router = useRouter();
 
-    const authorsData = [
-        { id: "1", name: "Author1" },
-        { id: "2", name: "Author2" },
-        { id: "3", name: "Author3" },
-        { id: "4", name: "Author4" },
-    ];
+    const [authorsData, setAuthorsData] = useState([]);
+
+    useEffect(() => {
+        const fetchAuthors = async () => {
+            try {
+                const response = await fetch('http://localhost:4000/getAuthors');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch books');
+                }
+                const data = await response.json();
+                console.log(data);
+                setAuthorsData(data.authors);
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        };
+
+        fetchAuthors();
+    }, []);
 
     return (
         <div>
             <p className="text-4xl font-serif tracking-wider text-center mt-12 text-[#725d36]">List of Authors</p>
 
-            <div className="flex flex-col content-center items-center mr-12 mt-10 gap-5">
+            <div className="flex flex-col content-center items-center mt-10 gap-5">
                 {authorsData.map((author) => (
                     <Link
-                        key={author.id}
+                        key={author._id}
                         href={`/authors/${author.id}`}
                         className="">
-                        <span className="text-sm pr-4">{author.id})_</span>{author.name}
+                        <ul>
+                            <li className="text-lg font-semibold tracking-wide list-inside list-disc hover:text-[#b39255]">{author.name}</li>
+                        </ul>
                     </Link>
                 ))}
 
