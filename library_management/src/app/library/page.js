@@ -1,17 +1,29 @@
 "use client"
 import { useRouter } from "next/navigation";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const booksData = [
-    { name: 'Book 1', authors: ['Author 1', 'Author 2'] },
-    { name: 'Book 2', authors: ['Author 3', 'Author 4'] },
-    { name: 'Book 3', authors: ['Author 4', 'Author 5', 'Author 6'] },
-
-];
 
 export default function Page() {
 
     const router = useRouter();
+    const [booksData, setBooksData] = useState(null);
+
+    useEffect(() => {
+        const fetchLibraryData = async () => {
+            try {
+                const response = await fetch('http://localhost:4000/getAuthorsAndBooks');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch books');
+                }
+                const data = await response.json();
+                setBooksData(data.booksData);
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        };
+
+        fetchLibraryData();
+    }, []);
 
     return (
         <div className="container mx-auto">
@@ -23,7 +35,7 @@ export default function Page() {
                     </tr>
                 </thead>
                 <tbody>
-                    {booksData.map((book, index) => (
+                    {/* {booksData.map((book, index) => (
                         <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
                             <td className="border font-medium px-4 py-2 border-gray-600">{book.name}</td>
                             <td className="border font-medium px-4 py-2 border-gray-600">
@@ -34,7 +46,7 @@ export default function Page() {
                                 </ul>
                             </td>
                         </tr>
-                    ))}
+                    ))} */}
                 </tbody>
             </table>
 

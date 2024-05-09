@@ -32,7 +32,7 @@ export default function Page() {
             <div className="flex flex-col content-center items-center text-center mt-10 gap-5">
                 {booksData.map((book) => (
                     <Link
-                        key={book.id}
+                        key={book._id}
                         href={`/books/${book._id}`}
                         className="">
                         <ul>

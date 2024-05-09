@@ -34,7 +34,7 @@ export default function Page() {
                 {authorsData.map((author) => (
                     <Link
                         key={author._id}
-                        href={`/authors/${author.id}`}
+                        href={`/authors/${author._id}`}
                         className="">
                         <ul>
                             <li className="text-lg font-semibold tracking-wide list-inside list-disc hover:text-[#b39255]">{author.name}</li>

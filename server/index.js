@@ -59,13 +59,45 @@ app.get("/getAuthors", async (req, res) => {
     }
 });
 
-app.get("/getAuthorsAndBooks", async (req, res) => {
+app.get("/getAuthors/:id", async (req, res) => {
     try {
+        const specificAuthorId = req.params.id;
+        const specificAuthor = await Author.findById(specificAuthorId).populate('booksByAuthor', 'title');
+        res.status(200).json({ authorDetails: specificAuthor });
 
     } catch (error) {
-        res.status(400).json({ msg: "Server Error in Fetching Authors and Books", error: e });
+        res.status(400).json({ msg: "Server Error in Fetching Authors and Books", error: error });
     }
 })
+
+app.get("/getBooks/:id", async (req, res) => {
+    try {
+        const specificBookId = req.params.id;
+        const specificBook = await Book.findById(specificBookId).populate('AuthorsOfBook', 'name');
+        res.status(200).json({ bookDetails: specificBook, msg: "Specific Author Details Fetched" });
+
+    } catch (error) {
+        res.status(400).json({ msg: "Server Error in Fetching Authors and Books", error: error });
+    }
+})
+
+app.get("/getAuthorsAndBooks", async (req, res) => {
+    try {
+        const booksData = await Book.find().populate({
+            path: 'AuthorsOfBook',
+            select: 'name',
+            populate: {
+                path: 'booksByAuthor',
+                select: 'title'
+            }
+        });
+        console.log(booksData);
+        res.status(200).json({ booksData: booksData, msg: "Authors and Books Data Fetched" });
+    } catch (error) {
+        res.status(400).json({ msg: "Server Error in Fetching Authors Data and Books Data", error: error });
+    }
+})
+
 
 async function populateCollections() {
     try {
