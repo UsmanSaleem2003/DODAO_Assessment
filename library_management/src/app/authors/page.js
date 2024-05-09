@@ -27,24 +27,25 @@ export default function Page() {
     }, []);
 
     return (
-        <div>
+        <div className="flex flex-col content-center items-center">
             <p className="text-4xl font-serif tracking-wider text-center mt-12 text-[#725d36]">List of Authors</p>
 
-            <div className="flex flex-col content-center items-center mt-10 gap-5">
+            <div className="flex flex-col items-center mt-10 gap-5">
+                {/* <div className="flex flex-col mt-10 gap-5"> */}
                 {authorsData.map((author) => (
                     <Link
                         key={author._id}
                         href={`/authors/${author._id}`}
                         className="">
                         <ul>
-                            <li className="text-lg font-semibold tracking-wide list-inside list-disc hover:text-[#b39255]">{author.name}</li>
+                            <li className="text-lg font-semibold tracking-wide list-inside hover:text-[#b39255]">{author.name}</li>
                         </ul>
                     </Link>
                 ))}
 
                 <button
                     onClick={() => router.push("/")}
-                    className='text-xl border-none ml-6 mt-10 bg-[#725d36] text-white w-40 h-12 rounded-lg transition-shadow shadow-[#866d3f] shadow-lg hover:shadow-[#68542f] hover:shadow-xl'>
+                    className='text-xl border-none mt-10 bg-[#725d36] text-white w-40 h-12 rounded-lg transition-shadow shadow-[#866d3f] shadow-lg hover:shadow-[#68542f] hover:shadow-xl'>
                     Back
                 </button>
             </div>
