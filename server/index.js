@@ -83,20 +83,21 @@ app.get("/getBooks/:id", async (req, res) => {
 
 app.get("/getAuthorsAndBooks", async (req, res) => {
     try {
-        const booksData = await Book.find().populate({
-            path: 'AuthorsOfBook',
-            select: 'name',
-            populate: {
-                path: 'booksByAuthor',
-                select: 'title'
-            }
-        });
-        console.log(booksData);
-        res.status(200).json({ booksData: booksData, msg: "Authors and Books Data Fetched" });
+        const booksData = await Book.find().populate('AuthorsOfBook', 'name');
+        const formattedBooksData = booksData.map(book => ({
+            _id: book._id,
+            title: book.title,
+            number_of_pages: book.number_of_pages,
+            release_data: book.release_data,
+            AuthorsOfBook: book.AuthorsOfBook.map(author => author.name),
+            __v: book.__v
+        }));
+
+        res.status(200).json({ booksData: formattedBooksData, msg: "Books Data Fetched Successfully" });
     } catch (error) {
         res.status(400).json({ msg: "Server Error in Fetching Authors Data and Books Data", error: error });
     }
-})
+});
 
 
 async function populateCollections() {
